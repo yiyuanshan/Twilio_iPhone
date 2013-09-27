@@ -55,10 +55,12 @@
     self.noContact.hidden=YES;
     self.recoreTableView.hidden=YES;
     [self initGetRecordListConnection];
+    self.recoreTableView.userInteractionEnabled=NO;
+    self.navigationController.navigationBar.userInteractionEnabled = NO;
 }
 -(void)initGetRecordListConnection
 {
-    [SVProgressHUD showWithStatus:@"获取联系记录..." maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:@"获取联系记录..." maskType:SVProgressHUDMaskTypeNone];
     NSMutableArray *array=[[NSMutableArray alloc] init];
     [[HelpDataBase instance] queryTotable:array];
     TLoginStatusBean *beanstatus=[array objectAtIndex:0];
@@ -76,7 +78,7 @@
 }
 -(void)initDeleateRecordToServer:(NSString *)recordID
 {
-    [SVProgressHUD showWithStatus:@"删除联系记录..." maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:@"删除联系记录..." maskType:SVProgressHUDMaskTypeNone];
     NSMutableArray *array=[[NSMutableArray alloc] init];
     [[HelpDataBase instance] queryTotable:array];
     TLoginStatusBean *beanstatus=[array objectAtIndex:0];
@@ -262,7 +264,8 @@
 	{
         [self handleError:error];
     }
-    
+    self.recoreTableView.userInteractionEnabled=YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
     getRecordListUrl = nil;
     deleateRecordUrl =nil;
     
@@ -293,6 +296,8 @@
         [getlist release];
     }
     [parser release];
+    self.recoreTableView.userInteractionEnabled=YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
 }
 - (void)handleError:(NSError *)error
 {

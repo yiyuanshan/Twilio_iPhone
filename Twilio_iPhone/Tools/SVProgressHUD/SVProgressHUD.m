@@ -61,7 +61,7 @@
 #pragma mark - Show Methods
 
 + (void)show {
-    [[SVProgressHUD sharedView] showWithStatus:nil maskType:SVProgressHUDMaskTypeGradient networkIndicator:NO];
+    [[SVProgressHUD sharedView] showWithStatus:nil maskType:SVProgressHUDMaskTypeNone networkIndicator:NO];
 }
 
 + (void)showWithStatus:(NSString *)status {

@@ -51,7 +51,6 @@
 {
     self.contactName.text=Name;
     self.contactPhone.text=Phone;
-
 }
 -(void)textfieldEmpty
 {
@@ -187,7 +186,7 @@
 	{
         [self handleError:error];
     }
-    
+
     editContactInfoConnection =nil;
 }
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection

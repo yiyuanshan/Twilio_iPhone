@@ -52,11 +52,15 @@
 }
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
+    self.tabBarController.view.userInteractionEnabled = NO;
+    self.navigationController.navigationBar.userInteractionEnabled = NO;
     [self initNavigationItem];
      [sectionDic removeAllObjects];
     for (int i = 0; i < 26; i++) [sectionDic setObject:[NSMutableArray array] forKey:[NSString stringWithFormat:@"%c",'A'+i]];
     [sectionDic setObject:[NSMutableArray array] forKey:[NSString stringWithFormat:@"%c",'#']];
+    
     
 }
 -(void)pinyinpaixu:(NSString *)personname RecordName:(id)record
@@ -195,7 +199,7 @@
 -(void)initGetContactListConnection
 {
     headArray=[[NSMutableArray alloc] initWithObjects:@" ", nil];
-    [SVProgressHUD showWithStatus:@"获取联系人..." maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:@"获取联系人..." maskType:SVProgressHUDMaskTypeNone];
     NSMutableArray *array=[[NSMutableArray alloc] init];
     [[HelpDataBase instance] queryTotable:array];
     TLoginStatusBean *beanstatus=[array objectAtIndex:0];
@@ -215,7 +219,7 @@
 
 -(void)initGetContactInfoConnection:(NSString *)userName
 {
-    [SVProgressHUD showWithStatus:@"搜索联系人..." maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:@"搜索联系人..." maskType:SVProgressHUDMaskTypeNone];
     NSMutableArray *array=[[NSMutableArray alloc] init];
     [[HelpDataBase instance] queryTotable:array];
     TLoginStatusBean *beanstatus=[array objectAtIndex:0];
@@ -235,7 +239,7 @@
 }
 -(void)initDeleateContactInfoConnection:(NSString *)userId
 {
-    [SVProgressHUD showWithStatus:@"删除联系人..." maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:@"删除联系人..." maskType:SVProgressHUDMaskTypeNone];
     NSMutableArray *array=[[NSMutableArray alloc] init];
     [[HelpDataBase instance] queryTotable:array];
     TLoginStatusBean *beanstatus=[array objectAtIndex:0];
@@ -286,7 +290,8 @@
 	{
         [self handleError:error];
     }
-    
+    self.tabBarController.view.userInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
     contactListUrl = nil;
     addContactUrl=nil;
     deleateContactUrl=nil;
@@ -348,6 +353,8 @@
     }
     
     [parser release];
+    self.tabBarController.view.userInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
 }
 - (void)handleError:(NSError *)error
 {
@@ -388,7 +395,6 @@
     }else{
         cell.textLabel.text = [ NSString stringWithFormat:@"   %@",name];
     }
-    NSLog(@"1");
     return cell;
 }
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -418,7 +424,6 @@
 //    }
 //    [headArray insertObject:head atIndex:0];
 //    return head;
-    NSLog(@"2");
     NSString *key=[NSString stringWithFormat:@"%c",[ALPHA characterAtIndex:section]];
     if ([[sectionDic objectForKey:key] count]!=0) {
         return key;
