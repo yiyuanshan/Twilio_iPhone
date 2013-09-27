@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class TwilioViewController;
+@class MonkeyPhone;
 
 @interface TwilioAppDelegate : UIResponder <UIApplicationDelegate>
-
+{
+    MonkeyPhone* _phone;
+}
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) TwilioViewController *viewController;
-
+@property (nonatomic, retain) MonkeyPhone* phone;
 @end

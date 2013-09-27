@@ -7,7 +7,32 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HelpDataBase.h"
+#import "TLoginStatusBean.h"
+//#import "SBJson.h"
+#import "DeviceUDID.h"
 
-@interface TwilioViewController : UIViewController
+@protocol loginStateDelegate <NSObject>
+
+-(void)loginState:(BOOL)sta;
+
+@end
+
+@interface TwilioViewController : UIViewController<UINavigationControllerDelegate,UITabBarControllerDelegate,UITabBarDelegate,UINavigationBarDelegate,loginStateDelegate,NSURLConnectionDelegate,UIAlertViewDelegate>
+{
+    UITabBarController *tabbarcontroller;
+    BOOL autoLoginStatus;
+    
+    NSURLConnection *loginConnection;
+    NSMutableData *loginData;
+    
+    NSDictionary *userDiction;
+}
+@property (retain,nonatomic) NSDictionary *userDiction;
+@property (retain,nonatomic) NSURLConnection *loginConnection;
+@property (retain,nonatomic) NSMutableData *loginData;
+@property (retain,nonatomic) UITabBarController *tabbarcontroller;
+@property (retain,nonatomic) NSMutableArray *autoArray;
+
 
 @end
