@@ -1,0 +1,21 @@
+{"ResultCode":0,"Record":[
+{"ID":"1","CDate":"2012-12-23","Content":"看见","UserID":"tony"},
+{"ID":"2","CDate":"2012-12-24","Content":"发布","UserID":"tony"},
+{"ID":"3","CDate":"2012-12-25","Content":"金利科技","UserID":"tony"},
+{"ID":"4","CDate":"2012-12-26","Content":"我所发生的","UserID":"tony"},
+{"ID":"5","CDate":"2012-12-27","Content":"乳房东方","UserID":"tony"},
+{"ID":"6","CDate":"2012-12-28","Content":"遇见","UserID":"tony"},
+{"ID":"7","CDate":"2012-12-29","Content":"库","UserID":"tony"},
+{"ID":"8","CDate":"2012-12-30","Content":"哟过","UserID":"tony"},
+{"ID":"9","CDate":"2012-12-31","Content":"品牌","UserID":"tony"},
+{"ID":"10","CDate":"2012-12-32","Content":"阿V阿道夫V","UserID":"tony"},
+{"ID":"11","CDate":"2012-12-33","Content":"在持续","UserID":"tony"},
+{"ID":"12","CDate":"2012-12-34","Content":"你不明白你们","UserID":"tony"}]}
+/*{"state":"ok","response":[
+                          {"id":"2610","name":"a","address":"null","number":"200646436"},
+                          {"id":"2620","name":"b","address":"null","number":"201058855"},
+                          {"id":"2621","name":"c","address":"null","number":"201148804"},
+                          {"id":"2622","name":"d","address":"null","number":"201244755"},
+                          {"id":"2623","name":"e","address":"null","number":"2013jhddd"},
+                          {"id":"2624","name":"f","address":"null","number":"20145194w"}]}
+*/
