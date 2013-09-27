@@ -12,7 +12,6 @@
 #import "TContactInFoController.h"
 #import "pinyin.h"
 #import "POAPinyin.h"
-typedef CFTypeRef RecordRef;
 
 @interface TContactViewController : TViewController<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate,NSURLConnectionDelegate,TAddContactViewDelegate>
 {
@@ -33,7 +32,9 @@ typedef CFTypeRef RecordRef;
     BOOL searchStatus;
     NSMutableArray *headArray;
     NSMutableDictionary *sectionDic;
+    NSArray *keys;
 }
+@property (retain,nonatomic) NSArray *keys;
 @property (retain,nonatomic) NSMutableArray *headArray;
 @property (retain,nonatomic) IBOutlet UILabel *noContact;
 @property (nonatomic,strong) NSMutableArray* listData;
@@ -52,4 +53,6 @@ typedef CFTypeRef RecordRef;
 @property (retain,nonatomic) IBOutlet UITableView *contactNameTableView;
 @property (retain,nonatomic) IBOutlet UISearchBar *nameSearchBar;
 
+//- (void)pinYinPaiXu:(NSString *)personname RecordName:(id)record;
+//-(BOOL)searchResult:(NSString *)contactname searchText:(NSString *)searchT;
 @end

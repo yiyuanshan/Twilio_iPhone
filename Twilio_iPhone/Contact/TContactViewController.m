@@ -22,8 +22,7 @@
 @synthesize searchContactData,searchContactUrl;
 @synthesize deleateContactData,deleateContactUrl;
 @synthesize headArray;
-
-
+@synthesize keys;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:@"TContactViewController" bundle:nibBundleOrNil];
@@ -48,6 +47,7 @@
     [deleateContactUrl release];
     [headArray release];
     [sectionDic            release];
+    [keys release];
     [super dealloc];
 }
 - (void)viewDidLoad
@@ -57,13 +57,62 @@
     self.tabBarController.view.userInteractionEnabled = NO;
     self.navigationController.navigationBar.userInteractionEnabled = NO;
     [self initNavigationItem];
-     [sectionDic removeAllObjects];
-    for (int i = 0; i < 26; i++) [sectionDic setObject:[NSMutableArray array] forKey:[NSString stringWithFormat:@"%c",'A'+i]];
-    [sectionDic setObject:[NSMutableArray array] forKey:[NSString stringWithFormat:@"%c",'#']];
+     }
+-(void)viewWillAppear:(BOOL)animated
+{
+    searchStatus=NO;
+    self.noContact.hidden=YES;
+    self.contactNameTableView.hidden=YES;
+    [self initGetContactListConnection];
+    [self setExtraCellLineHidden:self.contactNameTableView];
+    [sectionDic removeAllObjects];
+    for (int i = 0; i < 26; i++)
+    [sectionDic setObject:[NSMutableArray array] forKey:[NSString stringWithFormat:@"%c",'A'+i]];
+//    [sectionDic setObject:[NSMutableArray array] forKey:[NSString stringWithFormat:@"%c",'#']];
+    NSArray *array = [[sectionDic allKeys] sortedArrayUsingSelector:
+                      
+                      @selector(compare:)];
     
-    
+    self.keys = array;
 }
--(void)pinyinpaixu:(NSString *)personname RecordName:(id)record
+-(void)jsonParseTest:(NSString *)jsonString
+{
+    NSError *error = nil;
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *rootDic = [parser objectWithString:jsonString error:&error];
+    NSString *stateInfo = [rootDic objectForKey:@"state"];
+    if ([stateInfo isEqualToString:@"ok"]) {
+        NSString *responseInfo = [rootDic objectForKey:@"response"];
+        if ([responseInfo isEqualToString:@""]) {
+            if (searchStatus) {
+            }else
+            {
+            self.contactNameTableView.hidden=YES;
+            self.noContact.hidden=NO;
+            }
+        }else
+        {
+            self.contactNameTableView.hidden=NO;
+            self.noContact.hidden=YES;
+        self.listData = [responseInfo JSONValue];
+        NSSortDescriptor* sortByA = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        [self.listData sortUsingDescriptors:[NSArray arrayWithObject:sortByA]];
+         }
+    }
+//    NSMutableArray *presonArray=[[NSMutableArray alloc] init ];
+    for (int i=0;i<[self.listData count];i++) {
+        NSDictionary*  dict = [self.listData objectAtIndex:i];
+        NSString *name=[dict objectForKey:@"name"];
+//        [presonArray addObject:name];
+        NSString *head = [[name capitalizedString] substringToIndex:1];
+        [self pinYinPaiXu:name RecordName:head];
+    }
+    NSLog(@"sectionDic===%@",sectionDic);
+    [self.contactNameTableView reloadData];
+    [parser release];
+//    [presonArray release];
+}
+- (void)pinYinPaiXu:(NSString *)personname RecordName:(id)record;
 {
     char first=pinyinFirstLetter([personname characterAtIndex:0]);
     NSString *sectionName;
@@ -100,54 +149,6 @@
 		return YES;
 	else
 		return NO;
-}
--(void)viewWillAppear:(BOOL)animated
-{
-    searchStatus=NO;
-    self.noContact.hidden=YES;
-    self.contactNameTableView.hidden=YES;
-    [self initGetContactListConnection];
-    [self setExtraCellLineHidden:self.contactNameTableView];
-}
--(void)jsonParseTest:(NSString *)jsonString
-{
-    NSError *error = nil;
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSDictionary *rootDic = [parser objectWithString:jsonString error:&error];
-    NSString *stateInfo = [rootDic objectForKey:@"state"];
-    if ([stateInfo isEqualToString:@"ok"]) {
-        NSString *responseInfo = [rootDic objectForKey:@"response"];
-        if ([responseInfo isEqualToString:@""]) {
-            if (searchStatus) {
-            }else
-            {
-            self.contactNameTableView.hidden=YES;
-            self.noContact.hidden=NO;
-            }
-        }else
-        {
-            self.contactNameTableView.hidden=NO;
-            self.noContact.hidden=YES;
-        self.listData = [responseInfo JSONValue];
-        NSSortDescriptor* sortByA = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-        [self.listData sortUsingDescriptors:[NSArray arrayWithObject:sortByA]];
-         }
-    }
-    NSMutableArray *presonArray=[[NSMutableArray alloc] init ];
-    for (int i=0;i<[self.listData count];i++) {
-//        NSLog(@"%@",self.listData);
-        NSDictionary*  dict = [self.listData objectAtIndex:i];
-        NSString *name=[dict objectForKey:@"name"];
-        [presonArray addObject:name];
-    }
-    for (int i=0;i<[presonArray count];i++) {
-        NSString *preson=[presonArray objectAtIndex:i];
-        RecordRef record= [presonArray objectAtIndexedSubscript:i] ;
-        [self pinyinpaixu:preson RecordName:record];
-    }
-    [self.contactNameTableView reloadData];
-    [parser release];
-    [presonArray release];
 }
 
 -(void)showAddView
@@ -372,11 +373,15 @@
 #pragma  mark UITableViewDelegate
 - (NSInteger )numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.listData.count;
+    return [self.keys count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    NSString *key = [keys objectAtIndex:section];
+    
+    NSArray *nameSection = [sectionDic objectForKey:key];
+    
+    return [nameSection count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -395,6 +400,14 @@
     }else{
         cell.textLabel.text = [ NSString stringWithFormat:@"   %@",name];
     }
+//    NSUInteger section = [indexPath section];
+//    
+//    NSUInteger row = [indexPath row];
+//    
+//    NSString *key = [keys objectAtIndex:section];
+//    
+//    NSArray *nameSection = [sectionDic objectForKey:key];
+//    cell.textLabel.text = [nameSection objectAtIndex:row];
     return cell;
 }
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -415,20 +428,14 @@
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
    
-//    NSDictionary * dict = [self.listData objectAtIndex:section];
-//    NSString *name=[dict objectForKey:@"name"];
-//    NSString *head = [[name capitalizedString] substringToIndex:1];
-////    NSLog(@"head===%@",head);
-//    if ([head isEqualToString:[headArray objectAtIndex:0]]) {
-//        return nil;
-//    }
-//    [headArray insertObject:head atIndex:0];
-//    return head;
-    NSString *key=[NSString stringWithFormat:@"%c",[ALPHA characterAtIndex:section]];
+//    NSString *key=[NSString stringWithFormat:@"%c",[ALPHA characterAtIndex:section]];
+    NSString *key = [keys objectAtIndex:section];
     if ([[sectionDic objectForKey:key] count]!=0) {
         return key;
     }
     return nil;
+    
+//    return key;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
